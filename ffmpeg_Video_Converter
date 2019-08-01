@@ -1,0 +1,45 @@
+#!/bin/bash
+
+
+echo ------------------------------------------------
+echo "Enter input file"
+echo ------------------------------------------------
+
+# Loop forever (until break is issued)
+while true; do
+
+# Read File name
+read name
+
+#length of main string
+pathLen=${#name}
+
+# Get file name
+fileName="${name##*/}"
+
+# Trim file name extension
+fileNameTrimmed=$(echo "$fileName" | cut -f 1 -d '.')
+
+# Get file name length
+fileNameLen=${#fileName}
+#folder=
+
+# Find the last index of /
+endIndex=$pathLen-$fileNameLen
+
+# Get current folder name
+folderName=${name:0:$endIndex}
+ 
+echo ------------------------------------------------
+echo "Converted video will be created at: $folderName"
+echo ------------------------------------------------
+
+ffmpeg-bar -i "$name" -f mp4 -vcodec libx264 -preset slow -profile:v main -acodec aac -crf 20 "$folderName$fileNameTrimmed-converted.mp4"
+
+echo ------------------------------------------------
+echo "DONE!"
+echo "To continue... Drop a new file into window and hit Enter"
+echo "..."
+echo "Hit Kntrl+c to exit"
+echo ------------------------------------------------
+done
